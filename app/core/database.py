@@ -1,0 +1,1 @@
+#Caso eu queira implementar uma classe de banco de dados
