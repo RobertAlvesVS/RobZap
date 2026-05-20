@@ -1,8 +1,18 @@
-from app.utils.sender import sender
-async def commands(name, chat, sender, message):
-    text = message.get("conversation", "")
+from app.utils.sender import send_text
+
+async def text_commands(data: dict):
+    info = data.get("Info", {})
+    message = data.get("Message", {})
+
+    name = info.get("PushName", "Desconhecido")
+    chat = info.get("Chat", "Desconhecido")
+    sender = info.get("Sender", "Desconhecido")
+
+    text = (
+        message.get("conversation")
+        or message.get("extendedTextMessage", {}).get("text")
+        or "Desconhecido"
+    )
 
     if text.startswith("/ping"):
-        await sender(name, chat, sender, message)
-
-        
+        print(f"Comando ping recebido de {name} ({sender}) no chat {chat}")

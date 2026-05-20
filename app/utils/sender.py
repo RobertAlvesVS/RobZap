@@ -1,5 +1,3 @@
-async def sender(name: str, chat: str, sender: str, message: dict):
-    print(f"Sender: {sender}")
-    print(f"Chat: {chat}")
-    print(f"Name: {name}")
-    print(f"Message: {message}")
+async def send_text(number: str, text: str, delay: int = 3, mentionAll: bool = False):
+    print(f"Number: {number}")
+    print(f"Text: {text}")
