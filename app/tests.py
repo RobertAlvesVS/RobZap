@@ -15,7 +15,7 @@ headers = {"Content-Type": "application/json", "apikey": "MinhaGlobalAPIKeyFilho
 
 async def fetch_data():
     async with httpx.AsyncClient() as client:
-        response = await client.post("http://localhost:8080/send/text", json=payload)
+        response = await client.post("http://localhost:8080/send/text", json=payload, headers=headers)
         print(response.status_code)
         print(response.json())
 
