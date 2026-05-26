@@ -1,5 +1,5 @@
-from app.modulo.roleta import roleta
-from app.modulo.yt import baixar_yt
+from app.modules.roleta.roleta import roleta
+from app.modules.yt.baixar_yt import baixar_yt
 from app.utils.sender import (
     send_text,
     react_message,

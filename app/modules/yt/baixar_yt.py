@@ -21,7 +21,7 @@ async def baixar_yt(name: str, sender: str, chat: str, text: str):
             f"{name}, Para usar o comando /baixar, envie o link do vídeo do YouTube após o comando. Exemplo: /baixar https://www.youtube.com/watch?v=example",
         )
         return
-
+    print(f"Recebido comando de {name} para baixar vídeo: {video_url}")
     # Ajustado para forçar MP4 leve (limite de 1080p) para o WhatsApp aceitar sem problemas
     ydl_opts = {
         "format": "bestvideo[ext=mp4][height<=1080]+bestaudio[ext=m4a]/best[ext=mp4]/best",
