@@ -1,4 +1,5 @@
 import httpx
+import mimetypes
 
 
 async def send_text(number: str, text: str, delay: int = 3, mentionAll: bool = False):
@@ -9,12 +10,13 @@ async def send_text(number: str, text: str, delay: int = 3, mentionAll: bool = F
         "number": number,
         "text": text,
     }
-    headers = {"Content-Type": "application/json", "apikey": "TokenDeTeste!"}
+    headers = {"Content-Type": "application/json", "apikey": "TokenTeste"}
 
     async with httpx.AsyncClient() as client:
-        await client.post(
+        response = await client.post(
             "http://localhost:8080/send/text", json=payload, headers=headers
         )
+        print("Resposta do envio de texto:", response.status_code, response.text)
 
 
 async def react_message(chat: str, sender: str, messageId: str, emoji: str):
@@ -25,7 +27,7 @@ async def react_message(chat: str, sender: str, messageId: str, emoji: str):
         "fromMe": False,
         "participant": sender,
     }
-    headers = {"Content-Type": "application/json", "apikey": "TokenDeTeste!"}
+    headers = {"Content-Type": "application/json", "apikey": "TokenTeste"}
 
     async with httpx.AsyncClient() as client:
         await client.post(
@@ -39,7 +41,7 @@ async def remove_group_participant(chat: str, sender: str):
         "action": "remove",
         "participants": [sender],
     }
-    headers = {"Content-Type": "application/json", "apikey": "TokenDeTeste!"}
+    headers = {"Content-Type": "application/json", "apikey": "TokenTeste"}
 
     async with httpx.AsyncClient() as client:
         await client.post(
@@ -63,10 +65,41 @@ async def send_pix(chat: str):
             }
         ],
     }
-    headers = {"Content-Type": "application/json", "apikey": "TokenDeTeste!"}
+    headers = {"Content-Type": "application/json", "apikey": "TokenTeste"}
 
     async with httpx.AsyncClient() as client:
-        response =await client.post(
+        response = await client.post(
             "http://localhost:8080/send/button", json=payload, headers=headers
         )
         print("Resposta do envio do PIX:", response.status_code, response.text)
+
+
+async def send_media(
+    chat: str,
+    tipo: str,
+    file: bytes,
+    caption: str | None = None,
+    filename: str | None = None,
+):
+    data = {
+        "number": chat,
+        "type": tipo,
+        "caption": caption,
+    }
+
+    mimetype, _ = mimetypes.guess_type(filename) if filename else (None, None)
+    if not mimetype:
+        mimetype = "application/octet-stream"
+
+    files = {"file": (filename, file, mimetype)}
+
+    headers = {"apikey": "TokenTeste"}
+
+    async with httpx.AsyncClient() as client:
+        await client.post(
+            "http://localhost:8080/send/media",
+            data=data,
+            files=files,
+            headers=headers,
+            timeout=60,
+        )

@@ -1,6 +1,6 @@
+from app.modulo.roleta import roleta
+from app.modulo.yt import baixar_yt
 from app.utils.sender import (
-    remove_group_participant,
-    send_pix,
     send_text,
     react_message,
 )
@@ -26,21 +26,6 @@ async def text_commands(data: dict):
         await send_text(chat, "Pong!")
         await react_message(chat, sender, id, "🏓")
     elif text.startswith("/roleta"):
-        import random
-
-        print(f"Comando roleta russa recebido de {name} ({sender}) no chat {chat}")
-
-        if random.randint(1, 6) == 1:
-            await send_text(chat, f"{name} perdeu a roleta russa! 💥")
-            await react_message(chat, sender, id, "💥")
-            await remove_group_participant(chat, sender)
-        else:
-            await send_text(chat, f"{name} sobreviveu à roleta russa! 😅")
-            await react_message(chat, sender, id, "😅")
-    elif text.startswith("/pix"):
-        print(f"Comando pix recebido de {name} ({sender}) no chat {chat}")
-        await send_text(
-            chat,
-            f"Opa {name}, Obrigado por usar o comando /pix! Enviando as informações de pagamento...",
-        )
-        await send_pix(chat)
+        await roleta(name, sender, id, chat)
+    elif text.startswith("/baixar"):
+        await baixar_yt(name, sender, chat, text)
