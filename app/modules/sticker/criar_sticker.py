@@ -36,7 +36,7 @@ async def criar_sticker(chat: str, message_id: str, data: dict):
         # 4. Monta a URL usando o nome do serviço do seu FastAPI na rede do Docker
         # Substitua 'bot-fastapi:8000' pelo nome/porta real do seu service do compose
         url_interna_docker = (
-            f"http://bot-fastapi:8000/temp_media/{nome_arquivo}"
+            f"http://192.168.100.159:8000/temp_media/{nome_arquivo}"
         )
 
         print(f"📡 Solicitando sticker via Docker: {url_interna_docker}")
@@ -52,3 +52,4 @@ async def criar_sticker(chat: str, message_id: str, data: dict):
         if caminho_salvo and os.path.exists(caminho_salvo):
             os.remove(caminho_salvo)
             print("🧹 Arquivo temporário do sticker removido do container.")
+        pass

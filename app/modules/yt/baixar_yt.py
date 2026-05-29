@@ -25,7 +25,7 @@ async def baixar_yt(name: str, sender: str, chat: str, text: str):
     # Ajustado para forçar MP4 leve (limite de 1080p) para o WhatsApp aceitar sem problemas
     ydl_opts = {
         "format": "bestvideo[ext=mp4][height<=1080]+bestaudio[ext=m4a]/best[ext=mp4]/best",
-        "outtmpl": "%(title)s.%(ext)s",
+        "outtmpl": "temp_media/%(title)s.%(ext)s",
         "quiet": True,
         "cookiefile": "cookies.txt",
     }

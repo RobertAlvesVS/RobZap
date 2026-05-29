@@ -107,11 +107,11 @@ async def send_media(
 async def send_sticker_url(chat: str, url: str):
     payload = {
         "number": chat,
-        "url": url,
+        "sticker": url,
     }
     headers = {"Content-Type": "application/json", "apikey": "TokenTeste"}
     async with httpx.AsyncClient() as client:
         response = await client.post(
-            "http://localhost:8080/send/sticker/url", json=payload, headers=headers
+            "http://localhost:8080/send/sticker", json=payload, headers=headers
         )
         print("Resposta do envio do sticker via URL:", response.status_code, response.text)

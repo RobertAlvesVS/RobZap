@@ -1,4 +1,4 @@
-from app.modules.sticker import criar_sticker
+from app.modules.sticker.criar_sticker import criar_sticker
 from app.modules.yt.baixar_yt import baixar_yt
 
 
@@ -24,6 +24,6 @@ async def media_commands(data: dict):
     )
     if text.startswith("/baixar"):
         await baixar_yt(name, sender, chat, text)
-    elif text.strip() == "/sticker" and media_type == "image":
+    elif text.strip() in ["/s", "/sticker"] and media_type == "image":
         print(f"📸 Comando /sticker recebido de {name} no chat {chat}")
         await criar_sticker(chat, id, data)
