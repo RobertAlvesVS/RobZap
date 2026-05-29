@@ -8,9 +8,16 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   evolution-go:
     image: evoapicloud/evolution-go:latest
+    container_name: evolution-go
+    restart: unless-stopped
     ports:
       - "8080:8080"
     environment:
@@ -25,7 +32,16 @@ services:
       LOGTYPE: console
     depends_on:
       - postgres
-    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:8080/server/ok"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
 volumes:
   postgres_data:
+
+networks:
+  evolution-network:
+    external: true
