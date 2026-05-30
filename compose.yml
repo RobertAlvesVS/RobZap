@@ -5,10 +5,10 @@ services:
       dockerfile: Dockerfile
     container_name: robzap
     restart: unless-stopped
-    ports:
-      - "8002"
     environment:
       - PYTHONUNBUFFERED=1
+    networks:
+      - evolution-network
 
 networks:
   evolution-network:

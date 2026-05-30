@@ -1,5 +1,5 @@
 # Stage 1: Usar a imagem oficial do uv para preparar o ambiente
-FROM astral-sh/uv:python3.14-bookworm-slim AS builder
+FROM ghcr.io/astral-sh/uv:python3.14-trixie-slim AS builder
 
 # Ativar a compilação de bytes do Python para acelerar a inicialização do container
 ENV UV_COMPILE_BYTECODE=1

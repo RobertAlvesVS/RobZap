@@ -25,5 +25,4 @@ async def media_commands(data: dict):
     if text.startswith("/baixar"):
         await baixar_yt(name, sender, chat, text)
     elif text.strip() in ["/s", "/sticker"] and media_type == "image":
-        print(f"📸 Comando /sticker recebido de {name} no chat {chat}")
         await criar_sticker(chat, id, data)

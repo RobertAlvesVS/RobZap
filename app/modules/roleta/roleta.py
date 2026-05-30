@@ -4,7 +4,6 @@ from app.utils.sender import react_message, remove_group_participant, send_text
 
 
 async def roleta(name: str, sender: str, id: str, chat: str):
-    print(f"Comando roleta russa recebido de {name} ({sender}) no chat {chat}")
 
     if random.randint(1, 6) == 1:
         await send_text(chat, f"{name} perdeu a roleta russa! 💥")

@@ -1,5 +1,14 @@
 import httpx
 import mimetypes
+from app.core.config import settings
+
+
+async def ApiEvo(path: str, payload: dict) -> dict:
+    headers = {"apikey": settings.KEYEVO}
+    url = f"{settings.URLEVO}/{path}"
+    async with httpx.AsyncClient(timeout=60) as client:
+        response = await client.post(url, json=payload, headers=headers)
+        return response.json()
 
 
 async def send_text(number: str, text: str, delay: int = 3, mentionAll: bool = False):
@@ -10,13 +19,7 @@ async def send_text(number: str, text: str, delay: int = 3, mentionAll: bool = F
         "number": number,
         "text": text,
     }
-    headers = {"Content-Type": "application/json", "apikey": "TokenTeste"}
-
-    async with httpx.AsyncClient() as client:
-        response = await client.post(
-            "http://localhost:8080/send/text", json=payload, headers=headers
-        )
-        print("Resposta do envio de texto:", response.status_code, response.text)
+    await ApiEvo("send/text", payload)
 
 
 async def react_message(chat: str, sender: str, messageId: str, emoji: str):
@@ -27,12 +30,7 @@ async def react_message(chat: str, sender: str, messageId: str, emoji: str):
         "fromMe": False,
         "participant": sender,
     }
-    headers = {"Content-Type": "application/json", "apikey": "TokenTeste"}
-
-    async with httpx.AsyncClient() as client:
-        await client.post(
-            "http://localhost:8080/message/react", json=payload, headers=headers
-        )
+    await ApiEvo("message/react", payload)
 
 
 async def remove_group_participant(chat: str, sender: str):
@@ -41,37 +39,7 @@ async def remove_group_participant(chat: str, sender: str):
         "action": "remove",
         "participants": [sender],
     }
-    headers = {"Content-Type": "application/json", "apikey": "TokenTeste"}
-
-    async with httpx.AsyncClient() as client:
-        await client.post(
-            "http://localhost:8080/group/participant", json=payload, headers=headers
-        )
-
-
-async def send_pix(chat: str):
-    payload = {
-        "number": chat,
-        "title": "PIX",
-        "description": "Realize o pagamento via PIX:",
-        "footer": "Obrigado",
-        "buttons": [
-            {
-                "type": "pix",
-                "currency": "BRL",
-                "name": "Robert Alves Ventura dos Santos",
-                "keyType": "CPF",
-                "key": "06152890535",
-            }
-        ],
-    }
-    headers = {"Content-Type": "application/json", "apikey": "TokenTeste"}
-
-    async with httpx.AsyncClient() as client:
-        response = await client.post(
-            "http://localhost:8080/send/button", json=payload, headers=headers
-        )
-        print("Resposta do envio do PIX:", response.status_code, response.text)
+    await ApiEvo("group/participant", payload)
 
 
 async def send_media(
@@ -91,27 +59,22 @@ async def send_media(
     if not mimetype:
         mimetype = "application/octet-stream"
 
-    files = {"file": (filename, file, mimetype)}
-
-    headers = {"apikey": "TokenTeste"}
-
-    async with httpx.AsyncClient() as client:
+    async with httpx.AsyncClient(timeout=60) as client:
+        files = {"file": (filename, file, mimetype)}
+        headers = {"apikey": settings.KEYEVO}
         await client.post(
-            "http://localhost:8080/send/media",
+            f"{settings.URLEVO}/send/media",
             data=data,
             files=files,
             headers=headers,
             timeout=60,
         )
 
+
 async def send_sticker_url(chat: str, url: str):
     payload = {
         "number": chat,
         "sticker": url,
     }
-    headers = {"Content-Type": "application/json", "apikey": "TokenTeste"}
-    async with httpx.AsyncClient() as client:
-        response = await client.post(
-            "http://localhost:8080/send/sticker", json=payload, headers=headers
-        )
-        print("Resposta do envio do sticker via URL:", response.status_code, response.text)
+
+    await ApiEvo("send/sticker", payload)

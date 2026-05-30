@@ -2,6 +2,7 @@
 import os
 from app.utils.media_helper import salvar_base64_generico
 from app.utils.sender import send_sticker_url
+from app.core.config import settings
 
 
 async def criar_sticker(chat: str, message_id: str, data: dict):
@@ -15,9 +16,7 @@ async def criar_sticker(chat: str, message_id: str, data: dict):
 
     # 1. Garante que o base64 tenha o cabeçalho correto para a função genérica extrair a extensão (.jpg)
     if not base64_puro.startswith("data:"):
-        mimetype = message.get("imageMessage", {}).get(
-            "mimetype", "image/jpeg"
-        )
+        mimetype = message.get("imageMessage", {}).get("mimetype", "image/jpeg")
         base64_completo = f"data:{mimetype};base64,{base64_puro}"
     else:
         base64_completo = base64_puro
@@ -35,11 +34,7 @@ async def criar_sticker(chat: str, message_id: str, data: dict):
 
         # 4. Monta a URL usando o nome do serviço do seu FastAPI na rede do Docker
         # Substitua 'bot-fastapi:8000' pelo nome/porta real do seu service do compose
-        url_interna_docker = (
-            f"http://192.168.100.159:8000/temp_media/{nome_arquivo}"
-        )
-
-        print(f"📡 Solicitando sticker via Docker: {url_interna_docker}")
+        url_interna_docker = f"{settings.LOCALURL}/temp_media/{nome_arquivo}"
 
         # 5. Envia a URL para a Evolution API buscar de dentro do Docker
         await send_sticker_url(chat, url_interna_docker)
@@ -51,5 +46,3 @@ async def criar_sticker(chat: str, message_id: str, data: dict):
         # 6. Limpeza do arquivo temporário local para não entupir o HD
         if caminho_salvo and os.path.exists(caminho_salvo):
             os.remove(caminho_salvo)
-            print("🧹 Arquivo temporário do sticker removido do container.")
-        pass

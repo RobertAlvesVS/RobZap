@@ -59,7 +59,6 @@ async def baixar_yt(name: str, sender: str, chat: str, text: str):
             )
 
             os.remove(caminho_arquivo)
-            print("🧹 Arquivo temporário deletado com sucesso.")
         else:
             await send_text(chat, "❌ Erro: O arquivo de vídeo não foi encontrado.")
 
